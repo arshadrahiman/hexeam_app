@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hexmmart/controllers/expansion_controller.dart';
-import 'package:hexmmart/models/categories_model.dart';
+import 'package:hexmmart/models/demo_list.dart';
+import 'package:hexmmart/models/demo_model.dart';
 
 
 class Categories_Exp extends StatelessWidget {
@@ -13,42 +14,29 @@ class Categories_Exp extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Scaffold(
-        body: SingleChildScrollView(
+        body:SingleChildScrollView(
+          child: ExpansionPanelList.radio(
+            expansionCallback: (index, isExpanded) {
+              final tile = advancedTiless[index];
 
-          child: GetX<CategoryController>(
-         
-            builder: (controller ) {
-              return ExpansionPanelList.radio(
-                expansionCallback: (index, isExpanded) {
-                  expansionCallback:
-                  (index, isExpanded) {
-                    final tile = controller.categoryModel[index];
-                  };
-                },
-                children: controller.categoryModel
-                    .map((tile) =>
-                     ExpansionPanelRadio(
-                          value: tile.categoryDetails ,
-                          
-                          canTapOnHeader: true,
-                          headerBuilder: (context, isExpanded) => buildTile(tile),
-                          body: Column(
-                        children: tile.categoryDetails(buildTile),
-                        
-                          ),
-                        ))
-                    .toList(),
-              );
-            }
+            },
+            children: advancedTiless
+                .map((tile) => ExpansionPanelRadio(
+                      value: tile.title??'title',
+                      canTapOnHeader: true,
+                      headerBuilder: (context, isExpanded) => buildTile(tile),
+                      body: Column(
+                        children: tile.tiles.map(buildTile).toList(),
+                      ),
+                    ))
+                .toList(),
           ),
         ),
       ),
-    );
+      );
   }
-
-  Widget buildTile(CategoryModel tile) => ListTile(
-        // leading: tile.icon != null ? Icon(tile.icon) : null,
-        title: Text(tile.categoryDetails.toString()),
-        
+    Widget buildTile(AdvancedTile tile) => ListTile(
+        leading: tile.icon != null ? Icon(tile.icon) : null,
+        title: Text(tile.title??'title'),
       );
 }
